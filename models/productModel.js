@@ -10,7 +10,6 @@ var productSchema = new mongoose.Schema(
     },
     slug: {
       type: String,
-      required: true,
       unique: true,
       lowercase: true,
     },
@@ -39,12 +38,14 @@ var productSchema = new mongoose.Schema(
       default: 0,
     },
     images: [
-      {
-        public_id: String,
-        url: String,
-      },
+      // {
+      //   public_id: String,
+      //   url: String,
+      // },
     ],
-    color: [],
+    color: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Color" }
+    ],
     tags: String,
     ratings: [
       {

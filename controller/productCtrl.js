@@ -3,6 +3,39 @@ const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
 const validateMongoDbId = require("../utils/validateMongodbId");
+const cloudinaryUploadImg = require("../utils/cloudinary");
+const fs = require("fs");
+
+const uploadProductImages = asyncHandler(async (req, res, next) => {
+  const { id } = req.params
+  try {
+    const uploader = (path) => cloudinaryUploadImg(path, "images");
+    const urls = [];
+    const files = req.files;
+    for (const file of files) {
+      const { path } = file;
+      const newpath = await uploader(path);
+      console.log(newpath);
+      urls.push(newpath);
+
+    }
+    const findProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+        images: urls.map((file) => {
+          return file;
+        })
+      },
+      {
+        new: true
+      }
+    )
+    res.json(findProduct);
+  } catch (error) {
+    throw new Error(error);
+  }
+})
+
 
 const createProduct = asyncHandler(async (req, res) => {
   try {
@@ -17,13 +50,14 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const updateProduct = asyncHandler(async (req, res) => {
-  const id = req.params;
+
+  const { id } = req.params;
   validateMongoDbId(id);
   try {
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);
     }
-    const updateProduct = await Product.findOneAndUpdate({ id }, req.body, {
+    const updateProduct = await Product.findOneAndUpdate(id, req.body, {
       new: true,
     });
     res.json(updateProduct);
@@ -85,10 +119,13 @@ const getAllProduct = asyncHandler(async (req, res) => {
 
     // pagination
 
+    // page 3   limit 10
+
     const page = req.query.page;
     const limit = req.query.limit;
     const skip = (page - 1) * limit;
     query = query.skip(skip).limit(limit);
+
     if (req.query.page) {
       const productCount = await Product.countDocuments();
       if (skip >= productCount) throw new Error("This Page does not exists");
@@ -197,4 +234,5 @@ module.exports = {
   deleteProduct,
   addToWishlist,
   rating,
+  uploadProductImages
 };
