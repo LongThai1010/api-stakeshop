@@ -18,8 +18,16 @@ const uploadRouter = require("./routes/uploadRoute");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
+const { default: mongoose } = require("mongoose");
 
-dbConnect();
+// Connect DB
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+  })
+  .then(() => {
+    console.log("DB connection successfully");
+  });
 
 app.use(morgan("dev"));
 app.use(cors());
