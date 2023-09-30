@@ -19,6 +19,7 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 // Connect DB
 mongoose
@@ -67,6 +68,15 @@ app.use("/api/coupon", couponRouter);
 app.use("/api/color", colorRouter);
 app.use("/api/enquiry", enqRouter);
 // app.use("/api/upload", uploadRouter);
+
+app.use(
+  "/api/product",
+  createProxyMiddleware({
+    target: "https://api-stakeshop.vercel.app",
+    secure: false,
+    changeOrigin: true,
+  })
+);
 
 app.use(notFound);
 app.use(errorHandler);
