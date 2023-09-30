@@ -29,16 +29,16 @@ mongoose
     console.log("DB connection successfully");
   });
 
-  app.get('/', (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ 'App Name': 'Welcome to API GD Skateboard' }));
-  });
+app.get("/", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.end(JSON.stringify({ "App Name": "Welcome to API GD Skateboard" }));
+});
 
 app.use(cors());
 app.options("*", cors());
 
 app.use(morgan("dev"));
-app.use(cors());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
