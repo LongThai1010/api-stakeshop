@@ -29,24 +29,13 @@ mongoose
     console.log("DB connection successfully");
   });
 
-app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "https://api-stakeshop.vercel.app/");
+  app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ 'App Name': 'Welcome to API GD Skateboard' }));
+  });
 
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-
-  res.setHeader("Access-Control-Allow-Credentials", true);
-
-  // Pass to next layer of middleware
-  next();
-});
+app.use(cors());
+app.options("*", cors());
 
 app.use(morgan("dev"));
 app.use(cors());
