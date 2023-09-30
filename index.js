@@ -48,10 +48,7 @@ app.use(function (req, res, next) {
   // Pass to next layer of middleware
   next();
 });
-app.get("/", (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify({ "App Name": "Welcome to API GD Skateboard" }));
-});
+app.get("/", productRouter);
 
 app.use(morgan("dev"));
 app.use(cors());
