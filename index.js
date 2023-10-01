@@ -18,7 +18,6 @@ const uploadRouter = require("./routes/uploadRoute");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
-const xss = require("xss");
 const { default: mongoose } = require("mongoose");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
@@ -55,7 +54,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(xss());
 app.use("api/user", authRouter);
 app.use("api/product", productRouter);
 app.use("api/blog", blogRouter);
