@@ -65,15 +65,6 @@ app.use("api/color", colorRouter);
 app.use("api/enquiry", enqRouter);
 // app.use("/api/upload", uploadRouter);
 
-app.use(
-  "api/",
-  createProxyMiddleware({
-    target: "https://api-stakeshop.vercel.app",
-    secure: false,
-    changeOrigin: true,
-  })
-);
-
 app.use(notFound);
 app.use(errorHandler);
 app.listen(PORT, () => {
