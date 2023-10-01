@@ -18,6 +18,7 @@ const uploadRouter = require("./routes/uploadRoute");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
+const xss = require("xss");
 const { default: mongoose } = require("mongoose");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
@@ -31,7 +32,7 @@ mongoose
   });
 
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", process.env.REACT_URL);
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -48,13 +49,13 @@ app.use(function (req, res, next) {
   // Pass to next layer of middleware
   next();
 });
-app.get("/", productRouter);
 
 app.use(morgan("dev"));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(xss());
 app.use("api/user", authRouter);
 app.use("api/product", productRouter);
 app.use("api/blog", blogRouter);
@@ -67,25 +68,13 @@ app.use("api/enquiry", enqRouter);
 // app.use("/api/upload", uploadRouter);
 
 app.use(
-  "api/product",
+  "api/",
   createProxyMiddleware({
     target: "https://api-stakeshop.vercel.app",
     secure: false,
     changeOrigin: true,
   })
 );
-
-app.use(
-  "api/user",
-  createProxyMiddleware({
-    target: "https://api-stakeshop.vercel.app",
-    secure: false,
-    changeOrigin: true,
-  })
-);
-
-
-
 
 app.use(notFound);
 app.use(errorHandler);
